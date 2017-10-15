@@ -14,7 +14,7 @@ public class SpringMvcUtil implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        System.out.println("SpringMvcUtil初始化，当前线程：" + Thread.currentThread().getName());
+        System.out.println("SpringMvcUtil.setApplicationContext方法调用，当前线程：" + Thread.currentThread().getName());
         SpringMvcUtil.applicationContext = applicationContext;
     }
 
