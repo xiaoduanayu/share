@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/rabbit
+                http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+
+    <!--连接服务配置-->
+    <rabbit:connection-factory id="connectionFactory"/>
+    <rabbit:admin connection-factory="connectionFactory"/>
+
+    <!--queue声明-->
+    <rabbit:queue name="queue_one"/>
+
+    <!--exchange、queue、routingKey绑定-->
+    <rabbit:direct-exchange name="my_direct_exg">
+        <rabbit:bindings>
+            <rabbit:binding queue="queue_one" key="user_info_routing_key"/>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+
+    <bean id="userMessageConsumer" class="cn.cjc.share.mq.impl.UserMessageConsumerImpl"/>
+    <rabbit:listener-container connection-factory="connectionFactory" concurrency="5">
+        <rabbit:listener ref="userMessageConsumer" method="messageReceived" queue-names="queue_one"/>
+    </rabbit:listener-container>
+</beans>
